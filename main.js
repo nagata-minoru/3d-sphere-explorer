@@ -4,7 +4,10 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 // Creating cubes with Three.js
 (() => {
   let scene;
-  let box;
+  let solidGreenSphere;
+  let wireframeGreenSphere;
+  let solidRedSphere;
+  let wireframeRedSphere;
   let light;
   let ambient;
   let camera;
@@ -18,25 +21,46 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
   scene = new THREE.Scene()
 
-  box = new THREE.Mesh(
-    new THREE.BoxGeometry(50, 50, 50),
-    new THREE.MeshLambertMaterial({ color: 0xff0000 })
+  solidGreenSphere = new THREE.Mesh(
+    new THREE.SphereGeometry(50),
+    new THREE.MeshLambertMaterial({ color: 0x4caf50 })
   );
-  box.position.set(0, 0, 0);
-  scene.add(box);
+  solidGreenSphere.position.set(60, 0, 60);
+  scene.add(solidGreenSphere);
+
+  wireframeGreenSphere = new THREE.Mesh(
+    new THREE.SphereGeometry(50),
+    new THREE.MeshLambertMaterial({ color: 0x4caf50, wireframe: true })
+  );
+  wireframeGreenSphere.position.set(60, 0, -60);
+  scene.add(wireframeGreenSphere);
+
+  solidRedSphere = new THREE.Mesh(
+    new THREE.SphereGeometry(50, 8, 8),
+    new THREE.MeshLambertMaterial({ color: 'red' })
+  );
+  solidRedSphere.position.set(-60, 0, -60);
+  scene.add(solidRedSphere);
+
+  wireframeRedSphere = new THREE.Mesh(
+    new THREE.SphereGeometry(50, 8, 8),
+    new THREE.MeshLambertMaterial({ color: 'red', wireframe: true })
+  );
+  wireframeRedSphere.position.set(-60, 0, 60);
+  scene.add(wireframeRedSphere);
 
   light = new THREE.DirectionalLight(0xffffff, 1);
   light.position.set(0, 100, 30);
   scene.add(light);
 
-  ambient = new THREE.AmbientLight(0x404040, 0.9);
+  ambient = new THREE.AmbientLight(0x303030, 0.9);
   scene.add(ambient);
 
   camera = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
   camera.position.set(200, 100, 300);
   camera.lookAt(scene.position);
 
-  gridHelper = new THREE.GridHelper(200);
+  gridHelper = new THREE.GridHelper(350, 20);
   scene.add(gridHelper);
   axesHelper = new THREE.AxesHelper(1000);
   scene.add(axesHelper);
@@ -56,7 +80,6 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
     requestAnimationFrame(render);
 
     controls.update();
-    box.rotation.y += 0.01;
     renderer.render(scene, camera);
   };
   render();
