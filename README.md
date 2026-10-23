@@ -43,7 +43,14 @@ yarn build    # dist/ に公開用のファイルを作る
 yarn preview  # dist/ の内容をローカルで確認する
 ```
 
-`main` ブランチに push すると、GitHub Actions（`.github/workflows/deploy.yml`）がテストとビルドを実行して GitHub Pages に公開します。テストが失敗した場合は公開されません。
+GitHub Actions で次のワークフローが自動で動きます。
+
+| ワークフロー | タイミング | 内容 |
+|---|---|---|
+| CI（`.github/workflows/ci.yml`） | PR の作成・更新 | テストとビルドを実行し、結果を PR に表示する |
+| Deploy to GitHub Pages（`.github/workflows/deploy.yml`） | `main` への push | テストとビルドを実行し、GitHub Pages に公開する。テストが失敗した場合は公開しない |
+
+`main` にはルールセット（Settings → Rules）を設定しているので、CI の `test` ジョブが成功しないと PR をマージできません。
 
 ## 画面に表示されるもの
 
@@ -92,5 +99,7 @@ yarn preview  # dist/ の内容をローカルで確認する
 ├── public/                       # そのまま公開されるファイル
 │   ├── site.webmanifest          # Web アプリのマニフェスト
 │   └── icons/                    # ファビコンなど
-└── .github/workflows/deploy.yml  # GitHub Pages への公開
+└── .github/workflows/
+    ├── ci.yml                    # PR ごとのテストとビルド
+    └── deploy.yml                # GitHub Pages への公開
 ```
