@@ -23,7 +23,18 @@ yarn dev
 ```
 
 Three.js（0.152.2）はバンドルせず unpkg から読み込むので、インターネット接続が必要です。
-バージョンを変えるときは、`index.html` の Import Map と `vite.config.js` の `THREE_CDN` の両方を書き換えてください。
+バージョンを変えるときは、`index.html` の Import Map、`vite.config.js` の `THREE_CDN`、`package.json` の `three`（テスト用）の 3 か所を書き換えてください。
+
+## テスト
+
+[Vitest](https://vitest.dev/) で、`scene.js` が作るシーン（球の位置・色・分割数、光源、カメラ、補助線）をテストします。
+
+```zsh
+yarn test        # ファイルを保存するたびに再実行する
+yarn test --run  # 1 回だけ実行する
+```
+
+テストは Node.js 上で動き CDN から読み込めないので、devDependencies の `three`（CDN と同じ 0.152.2）を使います。
 
 ## ビルドと公開
 
@@ -32,7 +43,7 @@ yarn build    # dist/ に公開用のファイルを作る
 yarn preview  # dist/ の内容をローカルで確認する
 ```
 
-`main` ブランチに push すると、GitHub Actions（`.github/workflows/deploy.yml`）がビルドして GitHub Pages に公開します。
+`main` ブランチに push すると、GitHub Actions（`.github/workflows/deploy.yml`）がテストとビルドを実行して GitHub Pages に公開します。テストが失敗した場合は公開されません。
 
 ## 画面に表示されるもの
 
@@ -59,19 +70,21 @@ yarn preview  # dist/ の内容をローカルで確認する
 
 ## 改造するときの場所
 
-どれも `main.js` の中にあります。
+- **キャンバスのサイズ**：`main.js` の `width` / `height`
+- **自動回転を止める**：`main.js` の `controls.autoRotate = false`
+- **背景色**：`main.js` の `renderer.setClearColor(0xcfcfcf)`
+- **球の位置・色・細かさ**：`scene.js` の `SPHERES`。`segments` は `[横の分割数, 縦の分割数]` で、値を変えるとなめらかさの違いを比べられます
 
-- **キャンバスのサイズ**：`width` / `height`
-- **自動回転を止める**：`controls.autoRotate = false`
-- **球の細かさ**：`SphereGeometry(半径, 横の分割数, 縦の分割数)` の値を変えると、なめらかさの違いを比べられます
-- **背景色**：`renderer.setClearColor(0xcfcfcf)`
+`scene.js` を変えたら、`scene.test.js` の期待値も合わせて直してください。
 
 ## ファイル構成
 
 ```
 .
 ├── index.html                    # エントリポイント（Import Map で Three.js を読み込む）
-├── main.js                       # シーンの構築と描画
+├── main.js                       # 描画とマウス操作
+├── scene.js                      # 球・光源・カメラ・補助線の構築
+├── scene.test.js                 # scene.js のテスト
 ├── vite.config.js                # Vite の設定（Three.js を CDN から読み込む設定など）
 ├── package.json
 ├── yarn.lock                     # 依存パッケージのバージョン固定
