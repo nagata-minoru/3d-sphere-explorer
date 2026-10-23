@@ -3,6 +3,8 @@
 Three.js で 4 つの球体を表示し、マウスで視点を動かして観察できるデモです。
 ビルドは不要で、静的ファイル（`index.html` と `main.js`）だけで動きます。
 
+**公開ページ**: https://nagata-minoru.github.io/3d-sphere-explorer/
+
 ## 起動方法
 
 `main.js` は ES モジュールとして読み込まれるので、`index.html` を直接開く（`file://`）と動きません。
