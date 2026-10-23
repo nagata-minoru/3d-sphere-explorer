@@ -1,4 +1,4 @@
-# main への push でビルドし、GitHub Pages に公開する
+# main への push でビルドし、本番環境（GitHub Pages）に公開する
 name: Deploy to GitHub Pages
 
 on:
@@ -18,6 +18,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      entry: ${{ steps.entry.outputs.path }}
     steps:
       - uses: actions/checkout@v5
       - run: corepack enable
@@ -28,6 +30,9 @@ jobs:
       - run: yarn install --immutable
       - run: yarn test --run
       - run: yarn build
+      # 公開後の確認で使うため、ビルドした JS のパスを控えておく
+      - id: entry
+        run: echo "path=$(grep -o 'assets/index-[^"]*\.js' dist/index.html)" >> "$GITHUB_OUTPUT"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
@@ -39,6 +44,36 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # 本番環境が今回ビルドした版に切り替わり、必要なファイルが読み込めるかを確かめる
+  verify:
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    env:
+      PAGE_URL: ${{ needs.deploy.outputs.page_url }}
+      ENTRY: ${{ needs.build.outputs.entry }}
+    steps:
+      - name: 本番の HTML が今回のビルドを読み込んでいるか
+        run: |
+          for i in $(seq 1 12); do
+            if curl -fsS "$PAGE_URL" | grep -q "$ENTRY"; then
+              echo "OK: $PAGE_URL は $ENTRY を読み込んでいる"
+              exit 0
+            fi
+            echo "まだ切り替わっていないので待つ ($i/12)"
+            sleep 10
+          done
+          echo "NG: $PAGE_URL が $ENTRY に切り替わらなかった"
+          exit 1
+      - name: JS・favicon・マニフェスト・Three.js（CDN）が読み込めるか
+        run: |
+          for url in "${PAGE_URL}${ENTRY}" "${PAGE_URL}icons/favicon.ico" "${PAGE_URL}site.webmanifest" \
+            "$(curl -fsS "${PAGE_URL}${ENTRY}" | grep -o 'https://unpkg.com/three@[^"]*three.module.js')"; do
+            curl -fsS -o /dev/null "$url"
+            echo "OK: $url"
+          done

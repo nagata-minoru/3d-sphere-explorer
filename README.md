@@ -3,7 +3,7 @@
 Three.js で 4 つの球体を表示し、マウスで視点を動かして観察できるデモです。
 開発には [Vite](https://vite.dev/) を使います。
 
-**公開ページ**: https://nagata-minoru.github.io/3d-sphere-explorer/
+**本番環境**: https://nagata-minoru.github.io/3d-sphere-explorer/
 
 ## 起動方法
 
@@ -36,21 +36,37 @@ yarn test --run  # 1 回だけ実行する
 
 テストは Node.js 上で動き CDN から読み込めないので、devDependencies の `three`（CDN と同じ 0.152.2）を使います。
 
-## ビルドと公開
+## ビルド
 
 ```zsh
 yarn build    # dist/ に公開用のファイルを作る
 yarn preview  # dist/ の内容をローカルで確認する
 ```
 
+## CI/CD
+
 GitHub Actions で次のワークフローが自動で動きます。
 
 | ワークフロー | タイミング | 内容 |
 |---|---|---|
 | CI（`.github/workflows/ci.yml`） | PR の作成・更新 | テストとビルドを実行し、結果を PR に表示する |
-| Deploy to GitHub Pages（`.github/workflows/deploy.yml`） | `main` への push | テストとビルドを実行し、GitHub Pages に公開する。テストが失敗した場合は公開しない |
+| Deploy to GitHub Pages（`.github/workflows/deploy.yml`） | `main` への push | テストとビルドを実行し、本番環境に公開して、公開後の本番を確認する |
+
+### CI：マージ前の確認
 
 `main` にはルールセット（Settings → Rules）を設定しているので、CI の `test` ジョブが成功しないと PR をマージできません。
+
+### CD：本番環境への公開
+
+本番環境は GitHub Pages（https://nagata-minoru.github.io/3d-sphere-explorer/ ）です。
+`main` にマージすると、次の順で自動的に公開されます。
+
+1. **build**：テストとビルドを実行する。テストが失敗したら、ここで止まり公開しない
+2. **deploy**：`dist/` を本番環境に公開する
+3. **verify**：本番の HTML が今回ビルドした JS を読み込んでいるかを確かめる（反映を最大 2 分待つ）。あわせて、JS・favicon・マニフェスト・CDN の Three.js が読み込めるかも確かめる
+
+公開先の環境 `github-pages`（Settings → Environments）は、`main` ブランチからしか公開できないように制限されています。
+Actions の画面から「Run workflow」を押すと、`main` の内容で手動で公開し直すこともできます。
 
 ## 画面に表示されるもの
 
