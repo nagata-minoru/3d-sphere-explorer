@@ -18,5 +18,6 @@ const threeFromCdn = () => ({
 
 export default defineConfig({
   base: '/3d-sphere-explorer/',
-  plugins: [threeFromCdn()],
+  // テストは Node.js で動き CDN から読み込めないので、npm の three を使う
+  plugins: process.env.VITEST ? [] : [threeFromCdn()],
 });

@@ -26,6 +26,7 @@ jobs:
           node-version: 24
           cache: yarn
       - run: yarn install --immutable
+      - run: yarn test --run
       - run: yarn build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
