@@ -9,7 +9,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "3d-sphere-explorer@workspace:."
   dependencies:
-    three: "npm:0.152.2"
+    three: "npm:0.186.1"
     vite: "npm:^8.3.5"
     vitest: "npm:^5.0.5"
   languageName: unknown
@@ -653,10 +653,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"three@npm:0.152.2":
-  version: 0.152.2
-  resolution: "three@npm:0.152.2"
-  checksum: 10c0/955948d241cf1770216eb30e419196124c1ae3aa4b76eb232b0de7795797b1ab0f6de91aa8f38b0ff780b21e4bb8fced0e6613862cb68b237330caccef7e4d11
+"three@npm:0.186.1":
+  version: 0.186.1
+  resolution: "three@npm:0.186.1"
+  checksum: 10c0/8c8ed2d421da7cb4459bf3ad2961770d35173ef80885a594cb22fb44d275a9ba534b7ae92e93c99f50691b67febb913363ec5b64105fb7647289771d2bd32bc8
   languageName: node
   linkType: hard
 
