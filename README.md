@@ -1,22 +1,36 @@
 # 3D Sphere Explorer
 
 Three.js で 4 つの球体を表示し、マウスで視点を動かして観察できるデモです。
-ビルドは不要で、静的ファイル（`index.html` と `main.js`）だけで動きます。
+開発には [Vite](https://vite.dev/) を使います。
 
 **公開ページ**: https://nagata-minoru.github.io/3d-sphere-explorer/
 
 ## 起動方法
 
-`main.js` は ES モジュールとして読み込まれるので、`index.html` を直接開く（`file://`）と動きません。
-ローカルサーバーを立ててから開いてください。
+Node.js（20.19 以上）が必要です。最初に依存パッケージをインストールします。
 
 ```zsh
-uv run python -m http.server 8000
+npm install
 ```
 
-サーバーが起動したら、ブラウザで http://localhost:8000 を開きます。
+開発サーバーを起動し、表示された URL（http://localhost:5173/3d-sphere-explorer/ ）をブラウザで開きます。
+ファイルを保存すると、ブラウザが自動で更新されます。
 
-Three.js（0.152.2）は unpkg から読み込むので、インターネット接続が必要です。
+```zsh
+npm run dev
+```
+
+Three.js（0.152.2）はバンドルせず unpkg から読み込むので、インターネット接続が必要です。
+バージョンを変えるときは、`index.html` の Import Map と `vite.config.js` の `THREE_CDN` の両方を書き換えてください。
+
+## ビルドと公開
+
+```zsh
+npm run build    # dist/ に公開用のファイルを作る
+npm run preview  # dist/ の内容をローカルで確認する
+```
+
+`main` ブランチに push すると、GitHub Actions（`.github/workflows/deploy.yml`）がビルドして GitHub Pages に公開します。
 
 ## 画面に表示されるもの
 
@@ -54,8 +68,12 @@ Three.js（0.152.2）は unpkg から読み込むので、インターネット�
 
 ```
 .
-├── index.html         # エントリポイント（Import Map で Three.js を読み込む）
-├── main.js            # シーンの構築と描画
-├── site.webmanifest   # Web アプリのマニフェスト
-└── icons/             # ファビコンなど
+├── index.html                    # エントリポイント（Import Map で Three.js を読み込む）
+├── main.js                       # シーンの構築と描画
+├── vite.config.js                # Vite の設定（Three.js を CDN から読み込む設定など）
+├── package.json
+├── public/                       # そのまま公開されるファイル
+│   ├── site.webmanifest          # Web アプリのマニフェスト
+│   └── icons/                    # ファビコンなど
+└── .github/workflows/deploy.yml  # GitHub Pages への公開
 ```
