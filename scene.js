@@ -30,11 +30,12 @@ export const createScene = ({ width, height }) => {
   const spheres = SPHERES.map(createSphere);
   spheres.forEach((sphere) => scene.add(sphere));
 
-  const light = new THREE.DirectionalLight(0xffffff, 1);
+  // r155 から光の強さの単位が変わったので、以前と同じ明るさにするため π 倍にする
+  const light = new THREE.DirectionalLight(0xffffff, Math.PI);
   light.position.set(0, 100, 30);
   scene.add(light);
 
-  const ambient = new THREE.AmbientLight(0x303030, 0.9);
+  const ambient = new THREE.AmbientLight(0x303030, 0.9 * Math.PI);
   scene.add(ambient);
 
   const camera = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
