@@ -24,6 +24,7 @@ yarn dev
 
 Three.js（0.152.2）はバンドルせず unpkg から読み込むので、インターネット接続が必要です。
 バージョンを変えるときは、`index.html` の Import Map、`vite.config.js` の `THREE_CDN`、`package.json` の `three`（テスト用）の 3 か所を書き換えてください。
+Dependabot は `package.json` しか書き換えられず版がずれるので、`three` だけは更新の対象から外しています。
 
 ## テスト
 
@@ -126,7 +127,9 @@ Actions の画面で「Deploy to GitHub Pages」を選び、「Run workflow」�
 ├── public/                       # そのまま公開されるファイル
 │   ├── site.webmanifest          # Web アプリのマニフェスト
 │   └── icons/                    # ファビコンなど
-└── .github/workflows/
-    ├── ci.yml                    # PR ごとのテストとビルド
-    └── deploy.yml                # GitHub Pages への公開
+└── .github/
+    ├── dependabot.yml            # 依存パッケージの更新 PR を週 1 回作る設定
+    └── workflows/
+        ├── ci.yml                # PR ごとのテストとビルド
+        └── deploy.yml            # GitHub Pages への公開
 ```
