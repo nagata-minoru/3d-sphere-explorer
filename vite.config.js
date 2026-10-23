@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 
 // index.html の Import Map と同じ URL にすること
-const THREE_CDN = 'https://unpkg.com/three@0.152.2';
+const THREE_CDN = 'https://unpkg.com/three@0.186.1';
 
 // three をバンドルせず、CDN の URL に置き換えて読み込む
 const threeFromCdn = () => ({

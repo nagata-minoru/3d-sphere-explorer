@@ -22,7 +22,7 @@ yarn install     # 依存パッケージをインストール
 yarn dev
 ```
 
-Three.js（0.152.2）はバンドルせず unpkg から読み込むので、インターネット接続が必要です。
+Three.js（0.186.1）はバンドルせず unpkg から読み込むので、インターネット接続が必要です。
 バージョンを変えるときは、`index.html` の Import Map、`vite.config.js` の `THREE_CDN`、`package.json` の `three`（テスト用）の 3 か所を書き換えてください。
 Dependabot は `package.json` しか書き換えられず版がずれるので、`three` だけは更新の対象から外しています。
 
@@ -35,7 +35,7 @@ yarn test        # ファイルを保存するたびに再実行する
 yarn test --run  # 1 回だけ実行する
 ```
 
-テストは Node.js 上で動き CDN から読み込めないので、devDependencies の `three`（CDN と同じ 0.152.2）を使います。
+テストは Node.js 上で動き CDN から読み込めないので、devDependencies の `three`（CDN と同じ 0.186.1）を使います。
 
 ## ビルド
 

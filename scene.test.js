@@ -41,7 +41,7 @@ describe('光源', () => {
     expect(light).toBeInstanceOf(THREE.DirectionalLight);
     expect(light.parent).toBe(scene);
     expect(light.position.toArray()).toEqual([0, 100, 30]);
-    expect(light.intensity).toBe(1);
+    expect(light.intensity).toBe(Math.PI);
   });
 
   test('環境光がある', () => {
