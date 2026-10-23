@@ -11,6 +11,10 @@ updates:
     groups:
       dependencies:
         patterns: ['*']
+    # package.json の three はテスト用で、本番は index.html と vite.config.js の CDN の URL から読み込む。
+    # ここだけ上がると本番とテストの版がずれるので、上げるときは 3 か所を手で揃える
+    ignore:
+      - dependency-name: three
   - package-ecosystem: github-actions
     directory: /
     schedule:
