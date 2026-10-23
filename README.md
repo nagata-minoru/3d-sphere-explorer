@@ -61,12 +61,23 @@ GitHub Actions で次のワークフローが自動で動きます。
 本番環境は GitHub Pages（https://nagata-minoru.github.io/3d-sphere-explorer/ ）です。
 `main` にマージすると、次の順で自動的に公開されます。
 
-1. **build**：テストとビルドを実行する。テストが失敗したら、ここで止まり公開しない
-2. **deploy**：`dist/` を本番環境に公開する
+1. **build**：テストとビルドを実行し、`dist/` をアーティファクトとして GitHub にアップロードする（`actions/upload-pages-artifact`）。テストが失敗したら、ここで止まり公開しない
+2. **deploy**：アップロードしたアーティファクトの公開を GitHub Pages に依頼する（`actions/deploy-pages`）
 3. **verify**：本番の HTML が今回ビルドした JS を読み込んでいるかを確かめる（反映を最大 2 分待つ）。あわせて、JS・favicon・マニフェスト・CDN の Three.js が読み込めるかも確かめる
 
-公開先の環境 `github-pages`（Settings → Environments）は、`main` ブランチからしか公開できないように制限されています。
-Actions の画面から「Run workflow」を押すと、`main` の内容で手動で公開し直すこともできます。
+#### デプロイの方法
+
+GitHub Pages の公開元（Settings → Pages → Source）を「GitHub Actions」にしています。
+ワークフローでビルドした `dist/` を、Pages に直接渡して公開する方法です。
+
+- **公開用のブランチは使わない**：ビルド結果を `gh-pages` ブランチに push する方法とは違い、ビルド結果はアーティファクト（一時ファイル）として渡すだけなので、リポジトリの履歴には残らない
+- **秘密の鍵やトークンを置く必要がない**：ワークフローの `id-token: write` 権限で、GitHub がその実行専用の一時的な証明書（OIDC トークン）を発行し、Pages はそれで正しいワークフローからの依頼かどうかを確かめる
+- **公開できるのは `main` からだけ**：公開先の環境 `github-pages`（Settings → Environments）は、`main` ブランチ以外から公開できないように制限されている
+- **公開の履歴が残る**：リポジトリの Deployments で、いつどのコミットを公開したかを見られる
+
+#### 手動で公開し直す
+
+Actions の画面で「Deploy to GitHub Pages」を選び、「Run workflow」を押すと、`main` の内容で公開し直せます。
 
 ## 画面に表示されるもの
 
