@@ -7,17 +7,19 @@ Three.js で 4 つの球体を表示し、マウスで視点を動かして観�
 
 ## 起動方法
 
-Node.js（20.19 以上）が必要です。最初に依存パッケージをインストールします。
+Node.js（20.19 以上）と、パッケージ管理に [Yarn](https://yarnpkg.com/) 4 を使います。
+Yarn のバージョンは `package.json` の `packageManager` で固定しているので、Corepack を有効にしておけば自動でそのバージョンが使われます。
 
 ```zsh
-npm install
+corepack enable  # 初回だけ
+yarn install     # 依存パッケージをインストール
 ```
 
 開発サーバーを起動し、表示された URL（http://localhost:5173/3d-sphere-explorer/ ）をブラウザで開きます。
 ファイルを保存すると、ブラウザが自動で更新されます。
 
 ```zsh
-npm run dev
+yarn dev
 ```
 
 Three.js（0.152.2）はバンドルせず unpkg から読み込むので、インターネット接続が必要です。
@@ -26,8 +28,8 @@ Three.js（0.152.2）はバンドルせず unpkg から読み込むので、イ�
 ## ビルドと公開
 
 ```zsh
-npm run build    # dist/ に公開用のファイルを作る
-npm run preview  # dist/ の内容をローカルで確認する
+yarn build    # dist/ に公開用のファイルを作る
+yarn preview  # dist/ の内容をローカルで確認する
 ```
 
 `main` ブランチに push すると、GitHub Actions（`.github/workflows/deploy.yml`）がビルドして GitHub Pages に公開します。
@@ -72,6 +74,8 @@ npm run preview  # dist/ の内容をローカルで確認する
 ├── main.js                       # シーンの構築と描画
 ├── vite.config.js                # Vite の設定（Three.js を CDN から読み込む設定など）
 ├── package.json
+├── yarn.lock                     # 依存パッケージのバージョン固定
+├── .yarnrc.yml                   # Yarn の設定
 ├── public/                       # そのまま公開されるファイル
 │   ├── site.webmanifest          # Web アプリのマニフェスト
 │   └── icons/                    # ファビコンなど
